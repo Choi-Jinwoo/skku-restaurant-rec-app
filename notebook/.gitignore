@@ -1,0 +1,4 @@
+.venv
+.ipynb_checkpoints
+public_data.csv
+result.csv
