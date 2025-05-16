@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router";
+
 const MENUS = [
   { name: '메인', link: '/' },
   { name: '사용자 관리', link: '/user' },
@@ -7,6 +9,7 @@ const MENUS = [
 
 const TopNavBar = () => {
   const currentRoute = location.pathname;
+  const navigate = useNavigate();
 
   return (
     <nav className="flex bg-white shadow-sm py-4 px-32 align-center">
@@ -17,7 +20,12 @@ const TopNavBar = () => {
       </div>
       <div className="flex gap-16 text-gray-700">
         {MENUS.map((menu, index) => (
-          <div key={index} className={`cursor-pointer ${currentRoute === menu.link ? 'text-blue-600 font-bold' : ''}`}>
+          <div
+            key={index}
+            onClick={() => {
+              navigate(menu.link)
+            }}
+            className={`cursor-pointer ${currentRoute === menu.link ? 'text-blue-500 ' : ''}`}>
             {menu.name}
           </div>
         ))}

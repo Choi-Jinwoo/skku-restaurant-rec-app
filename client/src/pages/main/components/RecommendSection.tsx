@@ -22,7 +22,7 @@ const RecommendSection = () => {
 
   return (
     <div>
-      <h1 className="text-gray-700 text-xl mb-4">장소 추천받기</h1>
+      <h1 className="text-gray-700 text-xl mb-4 font-bold">장소 추천받기</h1>
       {
         recommendedMeetingPlaces != null ? (
           <RecommendedResult places={recommendedMeetingPlaces} />

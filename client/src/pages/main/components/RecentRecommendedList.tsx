@@ -50,7 +50,7 @@ const MOCK_LIST = [
 const RecentRecommendedList = () => {
   return (
     <div>
-      <h1 className="text-gray-700 text-xl mb-4">최근 추천 받은 장소</h1>
+      <h1 className="text-gray-700 text-xl mb-4 font-bold">최근 추천 받은 장소</h1>
       <section className="bg-white rounded-lg p-4">
         <h2 className="text-gray-400 text-sm mb-4 border-b-1 border-gray-200 pb-2">추천 받은 장소를 다녀오셨나요?</h2>
         <div className="flex flex-col gap-8">

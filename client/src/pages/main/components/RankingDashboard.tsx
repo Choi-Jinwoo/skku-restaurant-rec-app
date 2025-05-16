@@ -27,7 +27,7 @@ const USERS = [
 const RankingDashboard = () => {
   return (
     <div>
-      <h1 className="text-gray-700 text-xl mb-4">이번 달 프로 참석러</h1>
+      <h1 className="text-gray-700 text-xl mb-4 font-bold">이번 달 프로 참석러</h1>
       <section className="bg-white rounded-lg p-4">
         {USERS.map((user, idx) => (
           <div className={`flex items-center justify-between py-2 ${idx !== USERS.length - 1 ? 'border-b border-gray-100' : ''}`} key={user.id}>
