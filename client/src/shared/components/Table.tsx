@@ -1,7 +1,7 @@
 import React from 'react';
 
 type Column<T> = {
-  key: keyof T;
+  key?: keyof T;
   header: string;
   render?: (item: T) => React.ReactNode;
 };
@@ -29,7 +29,7 @@ const Table = <T,>({ columns, data }: TableProps<T>) => {
             <tr key={rowIndex} className="hover:bg-gray-50">
               {columns.map((col) => (
                 <td key={String(col.key)} className="px-4 py-3 text-gray-700">
-                  {col.render ? col.render(item) : String(item[col.key])}
+                  {col.render ? col.render(item) : col.key != null ? String(item[col.key]) : ''}
                 </td>
               ))}
             </tr>

@@ -15,7 +15,7 @@ const TopNavBar = () => {
     <nav className="flex bg-white shadow-sm py-4 px-32 align-center">
       <div className="mr-32">
         <span>
-          (가명) 모임 장소 추천 시스템
+          오늘 어디?
         </span>
       </div>
       <div className="flex gap-16 text-gray-700">

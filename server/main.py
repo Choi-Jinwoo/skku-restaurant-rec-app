@@ -1,12 +1,23 @@
 from fastapi import FastAPI
-from openai import OpenAI
-import os
 from dotenv import load_dotenv
+import handler.user as user_handler
+import handler.place as place_handler
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 
 load_dotenv()
 
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
@@ -15,54 +26,103 @@ async def root():
     return {"message": "Running"}
 
 
-client = OpenAI(api_key=os.getenv("OPENAI_SECRET_KEY"))
+@app.get("/users")
+async def get_users():
+    """전체 유저 조회"""
+    users = user_handler.get_users()
+
+    return {"users": users}
 
 
-def create_prompt(
-    user_count: int,
-    location: str,
-    room_reservation: bool,
-    parking: bool,
-    purpose: str,
-):
-    return f"""
-회사에서 회식 장소를 추천하려고 해
-
-아래 정보들을 기반으로 추천을 받고 싶어.
-
-회식인원: {user_count}명
-회식 위치: {location}
-룸 예약: {"가능" if room_reservation else "불가능"}
-주차: {"가능" if parking else "불가능"}
-회식 목적: {purpose}
-
-필요한 정보는
-
-- 상호명
-- 주소
-- 영업 시간
-- 특징
-- 업종 (한식, 중식, 양식 등등)
-- 식당 이미지
-
-이 정보를 json 으로 내려서 알려줘    
-"""
+class PlaceRecommendRequest(BaseModel):
+    userIds: list[str] = []
+    location: str
+    purpose: str
+    timeSlot: str
+    roomReservation: bool
+    parking: bool
 
 
-@app.get("/recommend")
-async def recommend():
-    """OpenAI API test"""
+@app.post("/place/recommend")
+async def recommend_place(body: PlaceRecommendRequest):
+    """식당 추천 생성"""
+    print("식당 추천 생성\nRequest Body")
+    print(body)
+    return {"data": place_handler.recommend_place(body.dict())}
 
-    response = client.responses.create(
-        model="gpt-4o",
-        instructions="너는 다양한 조건을 통해 식당을 추천해주는 역할이야.",
-        input=create_prompt(
-            user_count=4,
-            location="서울시 강남구 역삼동",
-            room_reservation=True,
-            parking=True,
-            purpose="친목",
-        ),
-    )
 
-    return {"message": response.output_text}
+@app.get("/place/list")
+async def get_places():
+    """식당 리스트 조회"""
+    places = place_handler.get_places()
+
+    return {"places": places}
+
+
+class UpdatePlaceStatusRequest(BaseModel):
+    placeId: str
+    status: str
+
+
+@app.post("/place/status/update")
+async def update_place_status(body: UpdatePlaceStatusRequest):
+    """식당 상태 업데이트"""
+    place_handler.update_place_status(body.placeId, body.status)
+
+    return {"message": "success"}
+
+
+@app.get("/user/rank")
+async def get_user_rank():
+    """프로 참석러 조회"""
+    users = place_handler.get_user_rank()
+
+    return {"users": users}
+
+
+class CreateUserRequest(BaseModel):
+    name: str
+    role: str
+    department: str
+    birthYear: int
+
+
+@app.post("/user")
+async def create_user(body: CreateUserRequest):
+    """사용자 추가"""
+    print("사용자 추가\nRequest Body")
+    print(body)
+
+    user_handler.create_user(body)
+
+    return {"message": "success"}
+
+
+class CreateReviewRequest(BaseModel):
+    placeId: str
+    score: int
+    content: str
+
+
+@app.post("/place/review")
+async def create_review(body: CreateReviewRequest):
+    """리뷰 생성"""
+    print("리뷰 생성\nRequest Body")
+    print(body)
+
+    place_handler.create_review(body)
+
+    return {"message": "success"}
+
+
+class MBTIRequest(BaseModel):
+    mbtis: list[str] = []
+
+
+@app.post("/mbti/score")
+async def get_mbti_score(body: MBTIRequest):
+    """MBTI 점수 조회"""
+    print("MBTI 점수 조회\nRequest Body")
+    print(body)
+
+    return {"score": place_handler.get_mbti_score(body.mbtis)}

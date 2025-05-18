@@ -8,15 +8,9 @@ const RecommendSection = () => {
   const [recommendedMeetingPlaces, setRecommendedMeetingPlaces] = useState<RecommendedMeetingPlace[] | null>(null);
 
   const handleSubmit = async (form: RecommendMeetingPlaceForm) => {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(void 0)
-      }, 3000)
-    });
-
     const { data } = await postRecommendMeetingPlace(form)
 
-    setRecommendedMeetingPlaces(data.places)
+    setRecommendedMeetingPlaces(data.data)
   }
 
 

@@ -1,9 +1,11 @@
 import { useState } from "react"
 import districts from '../../../constants/district.json'
-import SearchInput from "../../../shared/components/SearchInput"
-import { BusinessType, TimeSlot, User } from "../../../shared/models"
+import useUsers from "../../../hooks/useUsers"
 import { RadioGroup } from "../../../shared/components/RadioButton"
+import SearchInput from "../../../shared/components/SearchInput"
+import { BusinessType, TimeSlot } from "../../../shared/models"
 import Loading from "./Loading"
+import { User } from "../../../remote"
 
 export type RecommendMeetingPlaceForm = {
   users: User[]
@@ -14,18 +16,12 @@ export type RecommendMeetingPlaceForm = {
   room: boolean;
 }
 
-const USERS: User[] = [
-  { id: 1, name: '김OO' },
-  { id: 2, name: '이OO' },
-  { id: 3, name: '최OO' },
-  { id: 4, name: '박OO' }
-]
-
 type Props = {
   onSubmit: (form: RecommendMeetingPlaceForm) => void;
 }
 
 const RecommendForm = ({ onSubmit }: Props) => {
+  const { users } = useUsers();
   const [isLoading, setIsLoading] = useState(false)
   const [form, setForm] = useState<RecommendMeetingPlaceForm>({
     users: [],
@@ -56,12 +52,45 @@ const RecommendForm = ({ onSubmit }: Props) => {
     )
   }
 
+  if (users.length === 0) {
+    return (
+      <section className="bg-white rounded-lg px-4 py-20">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className={`inline-block`}>
+            <svg
+              className={`animate-spin text-blue-500`}
+              style={{ width: 24, height: 24 }}
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M12 2a10 10 0 0 1 10 10h-4a6 6 0 0 0-6-6V2z"
+              />
+            </svg>
+          </div>
+
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section className="bg-white rounded-lg p-4">
       <div>
         <div className="flex justify-between items-center gap-4">
           <SearchInput placeholder="홍길동" label="이름" list={
-            USERS.map(user => ({
+            users.map(user => ({
               label: user.name,
               value: user,
             }))

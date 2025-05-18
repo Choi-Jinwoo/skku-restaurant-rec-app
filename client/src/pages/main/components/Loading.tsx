@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 
 const TEXTS = [
   "가장 알맞은 장소를 찾고 있어요.",
+  "30초에서 1분 정도 소요될 수 있어요.",
   "조금만 기다려주세요.",
   "거의 다 찾았어요.",
   "조금만 더 기다려주세요.",
