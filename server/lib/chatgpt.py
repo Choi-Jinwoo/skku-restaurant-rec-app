@@ -62,7 +62,7 @@ def create_question(
 회식 시간대: {timeSlot}
 
 이전 각 사용자들이 다녀온 식당 정보를 참고해서 추천해주세요.
-{"\n".join(user_features)}
+{"\\n".join(user_features)}
 """
 
 
@@ -88,7 +88,7 @@ def ask_for_recommendation(
         timeSlot=timeSlot,
     )
 
-    print(f"📝 프롬프트\n{prompt}")
+    print(f"📝 프롬프트\\n{prompt}")
 
     response = client.responses.create(
         model="gpt-4o",
@@ -97,10 +97,9 @@ def ask_for_recommendation(
                 "type": "web_search_preview",
             }
         ],
-        input=f"""
-      {instructions}
-      {prompt}
-      """,
+        input= f"""
+{instructions}
+{prompt}""",
     )
 
     print("🤖 ChatGPT 응답")
